@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+    </head>
+    <body>
+
+        <h2>Sign up</h2>
+        <form action="#" method="post">            
+            <p class="firstNameError">
+                <label>First Name</label>
+                <input name="fname" type="text" value="" />
+                <span class="hide">*</span>
+            </p>
+            <p class="lastNameError">
+                <label>Last Name</label>
+                <input name="lname" type="text" value="" />
+                <span class="hide">*</span>
+            </p>  
+            <p class="emailError">
+                <label>Email Address</label>
+                <input name="email" type="text" value="" />
+                <span class="hide">*</span>
+            </p>
+             <p class="phoneError">
+                <label>Phone</label>
+                <input name="phone" type="text" value="" />
+                <span class="hide">*</span>
+            </p>
+             <p class="address1Error">
+                <label>Address 1</label>
+                <input name="address1" type="text" value="" />
+                <span class="hide">*</span>
+            </p>
+             <p class="address2Error">
+                <label>Address 2(Not Required)</label>
+                <input name="address2" type="text" value="" />
+                <span class="hide"></span>
+            </p>
+             <p class="cityError">
+                <label>City</label>
+                <input name="city" type="text" value="" />
+                <span class="hide">*</span>
+            </p>
+             <p class="stateError">
+                <label>State</label>
+                <input name="state" type="text" value="" />
+                <span class="hide">*</span>
+            </p>
+             <p class="zipError">
+                <label>Zip Code</label>
+                <input name="zip" type="text" value="" />
+                <span class="hide">*</span>
+            </p>
+
+            <input type="submit" value="Submit" />
+
+        </form>
+
+        <div id="confirmation"></div>
+
+        <script type="text/javascript" src="js/ajax.js"></script>
+        <script type="text/javascript">
+
+            var form = document.querySelector('form');
+            var confirmation = document.querySelector('#confirmation');
+
+            form.addEventListener('submit', checkForm);
+
+            function checkForm(e) {
+                e.preventDefault();
+                var validData = true;
+                var inputs = document.querySelectorAll('input');
+
+                var i = inputs.length;
+
+                var data = '';
+                while (i--) {
+                    //need to take out confirm password
+                    if (inputs[i].name && inputs[i].name !== 'address2') {
+                        if (inputs[i].value === "")
+                        {
+                            validData = false;
+                            break;
+                        }
+                        data += inputs[i].name + '=' + inputs[i].value + '&';
+                    }
+
+                }
+                data = data.slice(0, -1);
+                console.log(data);
+                var url = 'http://localhost/JSphp/api/saveAddress.php';
+                var verb = 'POST';
+
+                if (validData === true)
+                {
+                    window.makeRequestPromise(url, verb, data).then(httpResolve);
+                }
+                else
+                {s
+                    displayMessage("Please fill out all fields");
+                }
+
+
+            }
+
+            function httpResolve(response) {
+                console.log(response);
+                if (response.data.addressSave) {
+                    displayMessage('Address was Saved');
+                } else {
+                    displayMessage('Address could not be Saved');
+                }
+            }
+
+            function displayMessage(msg) {
+                window.confirmation.innerHTML = msg;
+            }
+
+
+
+        </script>
+    </body>
+</html>
